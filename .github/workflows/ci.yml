@@ -13,6 +13,7 @@ env:
   MPLBACKEND: Agg
   PYTEST_ADDOPTS: --color=yes
   GITHUB_PR_NUMBER: ${{ github.event.number }}
+  SONAR_HOST_URL: https://sonar-cta-dpps.zeuthen.desy.de
 
 jobs:
   lint:
@@ -132,10 +133,16 @@ jobs:
           pytest -n auto --dist loadscope \
             --cov --cov-report=xml \
             --doctest-modules --doctest-glob='*.rst' \
-            --ignore=$GITHUB_WORKSPACE/docs/conf.py \
+            --ignore=docs/conf.py \
             src/ctapipe docs
 
           ctapipe-info --version
+
+      # check code quality and coverage with SonarScanner
+      - uses: SonarSource/sonarqube-scan-action@master
+        if: contains(matrix.extra-args, 'codecov') && contains(github.event.pull_request.labels.*.name, 'documentation-only') == false
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - uses: codecov/codecov-action@v3
         if: contains(matrix.extra-args, 'codecov') && contains(github.event.pull_request.labels.*.name, 'documentation-only') == false
@@ -184,3 +191,4 @@ jobs:
         with:
           name: docs
           path: docs/_build/html
+
