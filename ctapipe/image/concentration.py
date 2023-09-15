@@ -4,7 +4,6 @@ import astropy.units as u
 from ..containers import (
     ConcentrationContainer,
     HillasParametersContainer,
-    CameraHillasParametersContainer,
 )
 from .hillas import camera_to_shower_coordinates
 from ..instrument import CameraGeometry
@@ -24,30 +23,17 @@ def concentration_parameters(geom: CameraGeometry, image, hillas_parameters):
     """
 
     h = hillas_parameters
-    if isinstance(h, CameraHillasParametersContainer):
-        unit = h.x.unit
-        pix_x, pix_y, x, y, length, width, pixel_width = all_to_value(
-            geom.pix_x,
-            geom.pix_y,
-            h.x,
-            h.y,
-            h.length,
-            h.width,
-            geom.pixel_width,
-            unit=unit,
-        )
-    elif isinstance(h, HillasParametersContainer):
-        unit = h.fov_lon.unit
-        pix_x, pix_y, x, y, length, width, pixel_width = all_to_value(
-            geom.pix_x,
-            geom.pix_y,
-            h.fov_lon,
-            h.fov_lat,
-            h.length,
-            h.width,
-            geom.pixel_width,
-            unit=unit,
-        )
+    unit = h.fov_lon.unit
+    pix_x, pix_y, x, y, length, width, pixel_width = all_to_value(
+        geom.pix_x,
+        geom.pix_y,
+        h.fov_lon,
+        h.fov_lat,
+        h.length,
+        h.width,
+        geom.pixel_width,
+        unit=unit,
+    )
 
     delta_x = pix_x - x
     delta_y = pix_y - y
