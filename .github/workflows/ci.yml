@@ -129,12 +129,11 @@ jobs:
       - name: Tests
         if: contains(github.event.pull_request.labels.*.name, 'documentation-only') == false
         run: |
-          cd $(mktemp -d)
           pytest -n auto --dist loadscope \
-            --cov --cov-report=xml:$GITHUB_WORKSPACE/coverage.xml \
+            --cov --cov-report=xml \
             --doctest-modules --doctest-glob='*.rst' \
             --ignore=$GITHUB_WORKSPACE/docs/conf.py \
-            --pyargs ctapipe $GITHUB_WORKSPACE/docs
+            src/ctapipe docs
 
           ctapipe-info --version
 
