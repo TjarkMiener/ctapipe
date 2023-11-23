@@ -114,12 +114,16 @@ jobs:
         run: |
           tee -a ~/.bash_profile <<<'export PATH="$pythonLocation/bin:$PATH"'
 
-      - name: Install dependencies
-        if: contains(github.event.pull_request.labels.*.name, 'documentation-only') == false
+      - name: Check python version
+        if: runner.os != "Windows" && contains(github.event.pull_request.labels.*.name, 'documentation-only') == false
         env:
           PYTHON_VERSION: ${{ matrix.python-version }}
         run: |
           python --version | grep "Python ${PYTHON_VERSION}"
+
+      - name: Install dependencies
+        if: contains(github.event.pull_request.labels.*.name, 'documentation-only') == false
+        run: |
           pip install pytest-cov pytest-xdist 'coverage!=6.3.0'
           pip install -e .[all]
           pip install ./test_plugin
