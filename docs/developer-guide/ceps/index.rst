@@ -20,6 +20,7 @@ Accepted CEPs
 
    accepted/*
 
+
 Proposed CEPs
 =============
 
@@ -29,8 +30,11 @@ Proposed CEPs
 
    proposed/*
 
+
 Rejected CEPs
 =============
+
+There are no rejected CEPs currently.
 
 .. .. toctree::
 ..    :maxdepth: 1

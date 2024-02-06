@@ -1,9 +1,9 @@
 [build-system]
-requires = ["setuptools >= 40.6.0", "setuptools_scm[toml]>=3.4"]
+requires = ["setuptools>=64", "setuptools_scm[toml]>=8"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools_scm]
-write_to = "ctapipe/_version.py"
+write_to = "src/ctapipe/_version.py"
 
 [tool.black]
 line-length = 88
@@ -24,6 +24,14 @@ exclude = '''
 '''
 
 [tool.pytest.ini_options]
+minversion = "7"
+testpaths = ["src"]
+log_cli_level = "INFO"
+xfail_strict = true
+
+# print summar of failed tests, force errors if settings are misspelled
+addopts = ["-ra", "--strict-config", "--strict-markers"]
+
 filterwarnings = [
     "error::astropy.utils.exceptions.AstropyDeprecationWarning",
     "error::ctapipe.utils.deprecation.CTAPipeDeprecationWarning",

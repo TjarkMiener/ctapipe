@@ -18,8 +18,7 @@ from copy import deepcopy
 import astropy.units as u
 import matplotlib.pyplot as plt
 import numpy as np
-from astropy.coordinates import AltAz
-from astropy.coordinates.angle_utilities import angular_separation
+from astropy.coordinates import AltAz, angular_separation
 from matplotlib.colors import ListedColormap
 from scipy.sparse.csgraph import connected_components
 from traitlets.config import Config
@@ -373,7 +372,6 @@ f = tempfile.NamedTemporaryFile(suffix=".hdf5")
 with DataWriter(
     source, output_path=f.name, overwrite=True, write_showers=True
 ) as writer:
-
     for event in source:
         energy = event.simulation.shower.energy
         n_telescopes_r1 = len(event.r1.tel)
@@ -401,7 +399,7 @@ with DataWriter(
 
 
 ######################################################################
-loader = TableLoader(f.name, load_dl2=True, load_simulated=True)
+loader = TableLoader(f.name)
 
 events = loader.read_subarray_events()
 
@@ -466,9 +464,13 @@ plt.legend()
 # ~~~~~~~~~~~~~~~~~~~~~~~~
 #
 
-loader = TableLoader(f.name, load_simulated=True, load_dl1_parameters=True)
+loader = TableLoader(f.name)
 
-dl1_table = loader.read_telescope_events(["LST_LST_LSTCam"])
+dl1_table = loader.read_telescope_events(
+    ["LST_LST_LSTCam"],
+    dl2=False,
+    true_parameters=False,
+)
 
 ######################################################################
 plt.scatter(
@@ -526,7 +528,6 @@ image = np.zeros(geometry.n_pixels)
 
 
 for i in range(9):
-
     model = toymodel.Gaussian(
         x=np.random.uniform(-0.8, 0.8) * u.m,
         y=np.random.uniform(-0.8, 0.8) * u.m,
